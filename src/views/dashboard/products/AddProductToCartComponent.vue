@@ -112,7 +112,7 @@ export default {
         addToCart(){
             
             this.SET_PRODUCT_TO_CART([this.product, this.selection]);
-            alert("done");
+            alert("Producto agregado al carrito");
             this.dialog=false;
         },
          

@@ -376,7 +376,7 @@ export default {
         },
         finish(){
             alert("Su compra ha sido procesada exitosamente!");
-            this.$router.replace({ name: 'Home'})
+            this.$router.replace({ name: 'Principal'})
 
         }
     }

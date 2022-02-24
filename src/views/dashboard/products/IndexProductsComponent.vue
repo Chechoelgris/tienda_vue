@@ -5,7 +5,7 @@
 
             <v-row>
                 <v-col
-                    v-for="product in filtered" v-bind:key="product.id"
+                    v-for="product in displayedProducts" v-bind:key="product.id"
                 >
                             <product-card-component :product="product"/>
                 </v-col>

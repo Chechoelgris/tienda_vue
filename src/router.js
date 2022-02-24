@@ -8,9 +8,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
       component: () => import('@/views/Index'),
       children:[
+        {
+          name: 'Principal',
+          path: '',
+          component: () => import('@/views/dashboard/Dashboard'),
+        },
         {
           path: "/productos",
           name: 'Productos',

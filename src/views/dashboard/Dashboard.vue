@@ -1,47 +1,106 @@
 <template>
-  <v-container
-    id="dashboard"
-    fluid
-    tag="section"
-  >
-  <!-- Buscador -->
-      <template>
+    <v-container fluid
+        >
+        <div >
+
+            <v-row>
+                <v-col
+                    v-for="product in displayedProducts" v-bind:key="product.id"
+                >
+                            <product-card-component :product="product"/>
+                </v-col>
+                
+            </v-row>
+            <v-row v-if="filtered.length>0">
+                <v-col>
+                    
+                    <div class="text-center">
+                        <v-pagination
+                        v-model="page"
+                        :length="this.paginationLength"
+                        :total-visible="this.total"
+                        ></v-pagination>
+                    </div>
+
+                    
+                </v-col>
+                    
+                </v-row>
+
+        </div>
+         
         
-        <!-- Aqui va el componente que mostrará contenido principal -->
-
-
-      </template>
-  </v-container>
+        
+    </v-container>
+     
 </template>
 
 <script>
-import StoreService from '@/services/StoreService'
+import ProductService from '@/services/ProductService'
 
 export default {
-    name: 'index',
     data() {
-      return {
-       
-
-
-      }
+        return {
+            products:[],
+            filtered:[],
+            page: 1,
+            total:4,
+            pages:[],
+        }
     },
-    beforeMount(){
-    },
+    created() {
+        this.$watch(
+        () => this.$route.params,
+            (toParams, previousParams) => {
+                this.filtered=[];
+ 
+                this.getProducts();
 
-    mounted(){
+            }
+        )
+  
+        
+    },
+    mounted() {
+        this.filtered=[];
+        this.getProducts();
+        
     },
     methods: {
-       
-    },
-    components:{
-      //PrincipalStageList: () => import('@/views/TRAG/ComponentesTrag/StagesListComponent'),
-    },
-    computed: {
-      // userLogged() {
-      //   return JSON.parse(TRAGService.getUserLogged());
-      // }
-    }
+        async getProducts(){
+            try {
+                
+            
+                const response = await ProductService.getProducts();
+                this.products=response.data;
+                this.filtered = this.products
+                 
 
+            } catch (error) {
+                
+            }
+        },
+        paginate(products){
+            let page = this.page;
+            let perPage = this.total;
+            let from = (page *perPage)-perPage
+            let to = (page*perPage);
+            return products.slice(from, to); 
+        }
+    },
+    components: {
+      ProductCardComponent: () => import('@/views/dashboard/products/ProductComponent'),
+    },
+    computed:{
+        paginationLength(){
+            return Math.ceil(this.filtered.length / this.total);
+        },
+        displayedProducts(){
+            return this.paginate(this.filtered);
+        },
+        haveItems(){
+            return this.filtered.length>0
+        }
+    }
 }
 </script>
